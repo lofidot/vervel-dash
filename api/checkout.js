@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
   const { userId, email } = req.body;
   const CREEM_API_KEY = process.env.CREEM_API_KEY;
-  const CREEM_PRODUCT_ID = process.env.CREEM_PRODUCT_ID; // Add this to your Vercel env vars!
+  const CREEM_PRODUCT_ID = process.env.CREEM_PRODUCT_ID; // Set this in Vercel env vars!
   const SUCCESS_URL = process.env.CREEM_SUCCESS_URL || "https://your-vercel-project.vercel.app/dashboard";
 
   const response = await fetch('https://api.creem.io/v1/checkouts', {
@@ -16,7 +16,13 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       product_id: CREEM_PRODUCT_ID,
       success_url: SUCCESS_URL,
-      request_id: userId // Optional: track user/payment
+      request_id: userId,
+      customer: {
+        email: email // This will pre-fill and lock the email field
+      },
+      metadata: {
+        userId: userId
+      }
     })
   });
 
